@@ -1,19 +1,32 @@
-import xonsh
-
-
 __all__ = ()
 
-print('This is xontrib-omx-macos!')
+# https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/osx/osx.plugin.zsh
+# https://github.com/sorin-ionescu/prezto/tree/master/modules/osx
 
+def _manp(args):
+    """Open man page using Preview.app"""
+    if not args or len(args) < 1:
+        echo "What manual page do you want?" out>err
+        return 1
+    for page in args:
+        man -t @(page) | open -f -a Preview
+aliases['manp'] = _manp
 
-# Good start! Get more documentation -> https://xon.sh/contents.html#guides
+def _pfd(args):
+    """Show the current directory in Finder.app"""
+    script = '''tell application "Finder"
+                    return POSIX path of (target of first window as text)
+                end tell'''
+    echo @(script) | osascript err>/dev/null
+aliases['pfd'] = _pfd
 
-
-# Note! If you will write the xontrib on Python it will work faster 
-# until https://github.com/xonsh/xonsh/issues/3953 hasn't released yet.
-# To use Python:
-#  1. rename this file from `xsh` to `py`
-#  2. replace `xsh` to `py` in `setup.py`
-#  3. rewrite the code using xonsh Python API i.e.:
-#   * `__xonsh__.env.get('VAR', 'default')` instead of `${...}.get('VAR', 'default')`
-#   * `__xonsh__.subproc_captured_stdout(['echo', '1'])` instead of `$(echo 1)`
+def _pfs(args):
+    """Show the current selection in Finder.app"""
+    script = '''tell application "Finder" to set the_selection to selection
+                if the_selection is not {}
+                  repeat with an_item in the_selection
+                    log POSIX path of (an_item as text)
+                  end repeat
+                end if'''
+    echo @(script) | osascript err>out
+aliases['pfs'] = _pfs
