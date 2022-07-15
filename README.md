@@ -2,6 +2,14 @@
 
 macOS utilities for Oh-My-Xonsh.
 
+## Commands
+
+| Commands | Description                              |
+|----------|------------------------------------------|
+| `manp`   | Open man page using Preview.app          |
+| `pfd`    | Show the current directory in Finder.app |
+| `pfs`    | Show the current selection in Finder.app |
+
 ## Installation
 
 To install use xpip:
